@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timestamps</title>
+    <!-- Load date-fns from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/cdn.min.js"></script>
+    <style>
+        .timestamp {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Timestamps</h1>
+    <div id="timestamps"></div>
+    <button onclick="addTimestamp()">Add Timestamp</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderTimestamps();
+        });
+
+        function renderTimestamps() {
+            var timestamps = JSON.parse(localStorage.getItem("timestamps")) || [];
+            var container = document.getElementById("timestamps");
+            container.innerHTML = "";
+
+            timestamps.forEach(function (timestamp) {
+                var timeAgo = dateFns.formatDistanceToNow(new Date(timestamp.date), { addSuffix: true });
+                var div = document.createElement("div");
+                div.classList.add("timestamp");
+                div.textContent = timestamp.text + " - " + timeAgo;
+                container.appendChild(div);
+            });
+        }
+
+        function addTimestamp() {
+            var text = prompt("Enter a text:");
+            if (text) {
+                var now = new Date();
+                var timestamp = { text: text, date: now };
+                var timestamps = JSON.parse(localStorage.getItem("timestamps")) || [];
+                timestamps.push(timestamp);
+                localStorage.setItem("timestamps", JSON.stringify(timestamps));
+                renderTimestamps();
+            }
+        }
+    </script>
+</body>
+
+</html>
